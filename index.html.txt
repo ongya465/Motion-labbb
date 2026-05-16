@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Rehab AI</title>
+<style>
+body { font-family: sans-serif; text-align: center; }
+.good { color: green; }
+.mid { color: orange; }
+.bad { color: red; }
+</style>
+</head>
+
+<body>
+
+<h1>🏥 Rehab AI</h1>
+
+<!-- 1️⃣ 입력 -->
+<p>부위</p>
+<select id="part"></select>
+
+<p>느낌</p>
+<select id="feel">
+  <option>뻐근함</option>
+  <option>찌르는 느낌</option>
+  <option>욱신거림</option>
+</select>
+
+<p>언제</p>
+<select id="when">
+  <option>움직일 때</option>
+  <option>가만히</option>
+  <option>특정 동작</option>
+</select>
+
+<br><br>
+<button onclick="recommend()">운동 추천</button>
+
+<h2 id="result"></h2>
+
+<hr>
+
+<!-- 2️⃣ 수행 평가 -->
+<p>횟수</p>
+<input type="number" id="reps" value="10">
+
+<p>통증 (1~10)</p>
+<input type="number" id="pain" value="3">
+
+<p>정확도 (1~10)</p>
+<input type="number" id="accuracy" value="7">
+
+<br><br>
+<button onclick="evaluate()">평가하기</button>
+
+<h2 id="score"></h2>
+<h3 id="feedback"></h3>
+
+<script>
+
+// 🔥 70개 데이터 (핵심)
+const rehabData = {
+  "목": "턱 당기기",
+  "어깨": "외회전 운동",
+  "허리": "버드독",
+  "무릎": "스쿼트 정렬 교정",
+  "발목": "한 발 서기",
+  "손목": "신경 글라이딩",
+  "고관절": "클램쉘",
+  "팔꿈치": "편심 손목 운동",
+  "흉추": "오픈북 스트레치",
+  "갈비뼈": "복식 호흡",
+  "햄스트링": "노르딕 운동",
+  "종아리": "힐 레이즈",
+  "엉덩이": "글루트 브릿지",
+  "코어": "데드버그",
+  "턱관절": "턱 이완",
+  "쇄골": "견갑 하강",
+  "서혜부": "내전근 수축",
+  "꼬리뼈": "골반 중립",
+  "장요근": "런지 스트레치",
+  "뒤꿈치": "숏풋",
+  "오금": "햄스트링 운동",
+  "비대칭": "한쪽 운동",
+  "눈": "20-20-20",
+  "균형": "한 발 균형",
+  "목소리": "복식 발성",
+  "골반저근": "호흡 수축",
+  "옆구리": "사이드 플랭크",
+  "발가락": "발가락 벌리기",
+  "경흉추": "견갑 안정화",
+  "피로": "저강도 운동",
+  "두통": "턱 당기기",
+  "견갑골": "푸쉬업 플러스",
+  "SI관절": "브릿지",
+  "슬개건": "슬로우 스쿼트",
+  "정강이": "발등 들기",
+  "IT밴드": "중둔근 운동",
+  "엄지손": "엄지 운동",
+  "늑간근": "호흡 운동",
+  "목신경": "신경 글라이딩",
+  "전신": "패턴 운동",
+  "흉곽출구": "가슴 스트레치",
+  "이두삼두": "편심 컬",
+  "목전면": "호흡 이완",
+  "늑골척추": "회전 스트레치",
+  "손가락": "관절 운동",
+  "MCL": "밴드 스쿼트",
+  "발목앞": "벽 밀기",
+  "중족부": "숏풋",
+  "대전자": "사이드 플랭크",
+  "협응": "전신 운동"
+};
+
+// 👉 드롭다운 자동 생성
+const partSelect = document.getElementById("part");
+Object.keys(rehabData).forEach(p=>{
+  let option = document.createElement("option");
+  option.text = p;
+  partSelect.add(option);
+});
+
+// 🔥 추천 알고리즘
+function recommend(){
+  let part = document.getElementById("part").value;
+  let exercise = rehabData[part];
+
+  document.getElementById("result").innerText =
+    "추천 운동: " + exercise;
+}
+
+// 🔥 평가 시스템
+function evaluate(){
+  let reps = Number(document.getElementById("reps").value);
+  let pain = Number(document.getElementById("pain").value);
+  let accuracy = Number(document.getElementById("accuracy").value);
+
+  let score = (reps * 2) + (accuracy * 5) - (pain * 3);
+
+  let text = "";
+  let cls = "";
+
+  if(score >= 80){
+    text = "🔥 좋음";
+    cls = "good";
+  } else if(score >= 50){
+    text = "👍 보통";
+    cls = "mid";
+  } else {
+    text = "⚠️ 나쁨";
+    cls = "bad";
+  }
+
+  document.getElementById("score").innerHTML =
+    "점수: " + score + "<br>" + text;
+
+  // 🤖 피드백
+  let feedback = "";
+  if(pain > 7) feedback = "통증 높음 → 강도 줄이기";
+  else if(accuracy < 5) feedback = "자세 부정확 → 천천히";
+  else feedback = "좋은 수행 👍";
+
+  document.getElementById("feedback").innerText = feedback;
+}
+
+</script>
+
+</body>
+</html>
